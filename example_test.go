@@ -19,6 +19,20 @@ func process(i int) QueueFunc {
 	}
 }
 
+func Example() {
+	d := New(nil)
+	for i := 0; i < 5; i++ {
+		d.Add(process(0))
+	}
+	d.Close()
+	// Output:
+	// Count: 0
+	// Count: 0
+	// Count: 0
+	// Count: 0
+	// Count: 0
+}
+
 func ExampleCancel() {
 	ctx, _ := context.WithTimeout(context.Background(), 50*time.Millisecond)
 	d := New(ctx)

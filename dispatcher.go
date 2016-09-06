@@ -125,7 +125,6 @@ func (d *Dispatcher) Add(f QueueFunc) {
 }
 
 func (d *Dispatcher) Close() {
-	d.cacnel()
 	close(d.q)
 	d.wg.Wait()
 }
