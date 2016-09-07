@@ -17,7 +17,7 @@ type (
 
 		q      chan QueueFunc
 		wg     sync.WaitGroup
-		cacnel context.CancelFunc
+		cancel context.CancelFunc
 
 		*options
 	}
@@ -78,7 +78,7 @@ func New(ctx context.Context, opts ...NewOption) *Dispatcher {
 
 	d := &Dispatcher{
 		q:       make(chan QueueFunc, opt.maxQueues),
-		cacnel:  cancel,
+		cancel:  cancel,
 		options: opt,
 	}
 
@@ -125,6 +125,13 @@ func (d *Dispatcher) Add(f QueueFunc) {
 }
 
 func (d *Dispatcher) Close() {
+	close(d.q)
+	d.wg.Wait()
+	d.cancel()
+}
+
+func (d *Dispatcher) Cancel() {
+	d.cancel()
 	close(d.q)
 	d.wg.Wait()
 }
